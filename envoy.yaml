@@ -8,7 +8,7 @@ admin:
 
 node:
   # The cluster name is used by Zipkin to identify the proxy.
-  cluster: envoy-gateway
+  cluster: app-gateway
 
 static_resources:
   listeners:
@@ -53,26 +53,26 @@ static_resources:
                   cluster: security_cluster
                 decorator:
                   operation: checkAvailability
-              # - match:
-              #     prefix: "/account"
-              #   route:
-              #     prefix_rewrite: "/api/account/getAccounts"
-              #     cluster: account_cluster
-              # - match:
-              #     prefix: "/deposit"
-              #   route:
-              #     prefix_rewrite: "/api/transaction/deposit"
-              #     cluster: deposit_cluster
-              # - match:
-              #     prefix: "/withdrawal"
-              #   route:
-              #     prefix_rewrite: "/api/transaction/withdrawal"
-              #     cluster: withdrawal_cluster
-              # - match:
-              #     prefix: "/movement"
-              #   route:
-              #     prefix_rewrite: "/api/movement/getMovementByAccountId"
-              #     cluster: movement_cluster
+              - match:
+                  prefix: "/account"
+                route:
+                  prefix_rewrite: "/api/account/getAccounts"
+                  cluster: account_cluster
+              - match:
+                  prefix: "/deposit"
+                route:
+                  prefix_rewrite: "/api/transaction/deposit"
+                  cluster: deposit_cluster
+              - match:
+                  prefix: "/withdrawal"
+                route:
+                  prefix_rewrite: "/api/transaction/withdrawal"
+                  cluster: withdrawal_cluster
+              - match:
+                  prefix: "/movement"
+                route:
+                  prefix_rewrite: "/api/movement/getMovementByAccountId"
+                  cluster: movement_cluster
               response_headers_to_add:
               - header:
                   key: "x-b3-traceid"

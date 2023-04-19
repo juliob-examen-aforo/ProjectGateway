@@ -31,26 +31,26 @@ static_resources:
                 route:
                   prefix_rewrite: "/api/auth/getToken"
                   cluster: security_cluster
-              # - match:
-              #     prefix: "/account"
-              #   route:
-              #     prefix_rewrite: "/api/account/getAccounts"
-              #     cluster: account_cluster
-              # - match:
-              #     prefix: "/deposit"
-              #   route:
-              #     prefix_rewrite: "/api/transaction/deposit"
-              #     cluster: deposit_cluster
-              # - match:
-              #     prefix: "/withdrawal"
-              #   route:
-              #     prefix_rewrite: "/api/transaction/withdrawal"
-              #     cluster: withdrawal_cluster
-              # - match:
-              #     prefix: "/movement"
-              #   route:
-              #     prefix_rewrite: "/api/movement/getMovementByAccountId"
-              #     cluster: movement_cluster
+              - match:
+                  prefix: "/account"
+                route:
+                  prefix_rewrite: "/api/account/getAccounts"
+                  cluster: account_cluster
+              - match:
+                  prefix: "/deposit"
+                route:
+                  prefix_rewrite: "/api/transaction/deposit"
+                  cluster: deposit_cluster
+              - match:
+                  prefix: "/withdrawal"
+                route:
+                  prefix_rewrite: "/api/transaction/withdrawal"
+                  cluster: withdrawal_cluster
+              - match:
+                  prefix: "/movement"
+                route:
+                  prefix_rewrite: "/api/movement/getMovementByAccountId"
+                  cluster: movement_cluster
           http_filters:
           - name: envoy.filters.http.router
   clusters:
@@ -69,63 +69,63 @@ static_resources:
               socket_address:
                 address: host.docker.internal
                 port_value: 5001
-  # - name: account_cluster
-  #   connect_timeout: 60s
-  #   type: LOGICAL_DNS
-  #   # Comment out the following line to test on v6 networks
-  #   dns_lookup_family: V4_ONLY
-  #   lb_policy: ROUND_ROBIN
-  #   load_assignment:
-  #     cluster_name: account_cluster
-  #     endpoints:
-  #     - lb_endpoints:
-  #       - endpoint:
-  #           address:
-  #             socket_address:
-  #               address: host.docker.internal
-  #               port_value: 5002
-  # - name: deposit_cluster
-  #   connect_timeout: 60s
-  #   type: LOGICAL_DNS
-  #   # Comment out the following line to test on v6 networks
-  #   dns_lookup_family: V4_ONLY
-  #   lb_policy: ROUND_ROBIN
-  #   load_assignment:
-  #     cluster_name: deposit_cluster
-  #     endpoints:
-  #     - lb_endpoints:
-  #       - endpoint:
-  #           address:
-  #             socket_address:
-  #               address: host.docker.internal
-  #               port_value: 5003
-  # - name: withdrawal_cluster
-  #   connect_timeout: 60s
-  #   type: LOGICAL_DNS
-  #   # Comment out the following line to test on v6 networks
-  #   dns_lookup_family: V4_ONLY
-  #   lb_policy: ROUND_ROBIN
-  #   load_assignment:
-  #     cluster_name: withdrawal_cluster
-  #     endpoints:
-  #     - lb_endpoints:
-  #       - endpoint:
-  #           address:
-  #             socket_address:
-  #               address: host.docker.internal
-  #               port_value: 5004
-  # - name: movement_cluster
-  #   connect_timeout: 60s
-  #   type: LOGICAL_DNS
-  #   # Comment out the following line to test on v6 networks
-  #   dns_lookup_family: V4_ONLY
-  #   lb_policy: ROUND_ROBIN
-  #   load_assignment:
-  #     cluster_name: movement_cluster
-  #     endpoints:
-  #     - lb_endpoints:
-  #       - endpoint:
-  #           address:
-  #             socket_address:
-  #               address: host.docker.internal
-  #               port_value: 5005
+  - name: account_cluster
+    connect_timeout: 60s
+    type: LOGICAL_DNS
+    # Comment out the following line to test on v6 networks
+    dns_lookup_family: V4_ONLY
+    lb_policy: ROUND_ROBIN
+    load_assignment:
+      cluster_name: account_cluster
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: host.docker.internal
+                port_value: 5002
+  - name: deposit_cluster
+    connect_timeout: 60s
+    type: LOGICAL_DNS
+    # Comment out the following line to test on v6 networks
+    dns_lookup_family: V4_ONLY
+    lb_policy: ROUND_ROBIN
+    load_assignment:
+      cluster_name: deposit_cluster
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: host.docker.internal
+                port_value: 5003
+  - name: withdrawal_cluster
+    connect_timeout: 60s
+    type: LOGICAL_DNS
+    # Comment out the following line to test on v6 networks
+    dns_lookup_family: V4_ONLY
+    lb_policy: ROUND_ROBIN
+    load_assignment:
+      cluster_name: withdrawal_cluster
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: host.docker.internal
+                port_value: 5004
+  - name: movement_cluster
+    connect_timeout: 60s
+    type: LOGICAL_DNS
+    # Comment out the following line to test on v6 networks
+    dns_lookup_family: V4_ONLY
+    lb_policy: ROUND_ROBIN
+    load_assignment:
+      cluster_name: movement_cluster
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: host.docker.internal
+                port_value: 5005
