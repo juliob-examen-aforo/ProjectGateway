@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: app-gateway
-        image: juliocm18/app-gateway:7
+        image: juliocm18/app-gateway:8
         ports:
         - containerPort: 10000
 ---
