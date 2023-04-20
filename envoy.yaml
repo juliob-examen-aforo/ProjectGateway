@@ -8,7 +8,7 @@ admin:
 
 node:
   # The cluster name is used by Zipkin to identify the proxy.
-  cluster: app-gateway
+  cluster: envoy-gateway
 
 static_resources:
   listeners:
@@ -54,25 +54,20 @@ static_resources:
                 decorator:
                   operation: checkAvailability
               - match:
-                  prefix: "/account"
+                  prefix: "/payment"
                 route:
-                  prefix_rewrite: "/api/account/getAccounts"
-                  cluster: account_cluster
+                  prefix_rewrite: "/api/payment/pay"
+                  cluster: payment_cluster
               - match:
-                  prefix: "/deposit"
+                  prefix: "/transactions"
                 route:
-                  prefix_rewrite: "/api/transaction/deposit"
-                  cluster: deposit_cluster
+                  prefix_rewrite: "/api/transaction/getTransactionsByInvoiceId"
+                  cluster: transaction_cluster
               - match:
-                  prefix: "/withdrawal"
+                  prefix: "/invoices"
                 route:
-                  prefix_rewrite: "/api/transaction/withdrawal"
-                  cluster: withdrawal_cluster
-              - match:
-                  prefix: "/movement"
-                route:
-                  prefix_rewrite: "/api/movement/getMovementByAccountId"
-                  cluster: movement_cluster
+                  prefix_rewrite: "/api/invoice/getInvoice"
+                  cluster: invoice_cluster
               response_headers_to_add:
               - header:
                   key: "x-b3-traceid"
@@ -92,19 +87,15 @@ static_resources:
                     inline_string: '{"keys":[{"typ": "JWT", "kty":"oct","alg":"HS256","kid":"df","k":"S2V5U2VjcmV0IzEyM0Fmb3JvMjU1IzI1NSNOb2RlSlNNaWNybw=="}]}' #https://www.base64encode.org/  ->  ENCODE ->   KeySecret#123Aforo255#255#NodeJSMicro
               rules:
                 - match:
-                    prefix: /account
+                    prefix: /payment
                   requires:
                     provider_name: jwt_provider
                 - match:
-                    prefix: /deposit
+                    prefix: /invoices
                   requires:
                     provider_name: jwt_provider
                 - match:
-                    prefix: /withdrawal
-                  requires:
-                    provider_name: jwt_provider
-                - match:
-                    prefix: /movement
+                    prefix: /transactions
                   requires:
                     provider_name: jwt_provider
           - name: envoy.filters.http.router
@@ -126,65 +117,50 @@ static_resources:
               socket_address:
                 address: app-service-security
                 port_value: 80
-  - name: account_cluster
+  - name: payment_cluster
     connect_timeout: 60s
     type: LOGICAL_DNS
     # Comment out the following line to test on v6 networks
     dns_lookup_family: V4_ONLY
     lb_policy: ROUND_ROBIN
     load_assignment:
-      cluster_name: account_cluster
+      cluster_name: payment_cluster
       endpoints:
       - lb_endpoints:
         - endpoint:
             address:
               socket_address:
-                address: app-service-account
+                address: app-service-pay
                 port_value: 80
-  - name: deposit_cluster
+  - name: transaction_cluster
     connect_timeout: 60s
     type: LOGICAL_DNS
     # Comment out the following line to test on v6 networks
     dns_lookup_family: V4_ONLY
     lb_policy: ROUND_ROBIN
     load_assignment:
-      cluster_name: deposit_cluster
+      cluster_name: transaction_cluster
       endpoints:
       - lb_endpoints:
         - endpoint:
             address:
               socket_address:
-                address: app-service-deposit
+                address: app-service-transaction
                 port_value: 80
-  - name: withdrawal_cluster
+  - name: invoice_cluster
     connect_timeout: 60s
     type: LOGICAL_DNS
     # Comment out the following line to test on v6 networks
     dns_lookup_family: V4_ONLY
     lb_policy: ROUND_ROBIN
     load_assignment:
-      cluster_name: withdrawal_cluster
+      cluster_name: invoice_cluster
       endpoints:
       - lb_endpoints:
         - endpoint:
             address:
               socket_address:
-                address: app-service-withdrawal
-                port_value: 80
-  - name: movement_cluster
-    connect_timeout: 60s
-    type: LOGICAL_DNS
-    # Comment out the following line to test on v6 networks
-    dns_lookup_family: V4_ONLY
-    lb_policy: ROUND_ROBIN
-    load_assignment:
-      cluster_name: movement_cluster
-      endpoints:
-      - lb_endpoints:
-        - endpoint:
-            address:
-              socket_address:
-                address: app-service-movement
+                address: app-service-invoices
                 port_value: 80
   - name: zipkin
     connect_timeout: 1s
