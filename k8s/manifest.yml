@@ -15,10 +15,10 @@ spec:
         app: service-gateway
     spec:
       containers:
-      - name: app-gateway
-        image: juliocm18/app-gateway:8
-        ports:
-        - containerPort: 10000
+        - name: app-gateway
+          image: juliocm18/app-gateway:9
+          ports:
+            - containerPort: 10000
 ---
 kind: Service
 apiVersion: v1
@@ -29,7 +29,7 @@ spec:
   selector:
     app: service-gateway
   ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 10000
-    name: http
+    - protocol: TCP
+      port: 80
+      targetPort: 10000
+      name: http
